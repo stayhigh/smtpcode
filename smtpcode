@@ -1,0 +1,62 @@
+#!/bin/bash
+
+smtpcodelist="
+200 (nonstandard success response, see rfc876)\n
+211 System status, or system help reply\n
+214 Help message\n
+220 <domain> Service ready\n
+221 <domain> Service closing transmission channel\n
+250 Requested mail action okay, completed\n
+251 User not local; will forward to <forward-path>\n
+354 Start mail input; end with <CRLF>.<CRLF>\n
+421 <domain> Service not available, closing transmission channel\n
+450 Requested mail action not taken: mailbox unavailable\n
+451 Requested action aborted: local error in processing\n
+452 Requested action not taken: insufficient system storage\n
+500 Syntax error, command unrecognised\n
+501 Syntax error in parameters or arguments\n
+502 Command not implemented\n
+503 Bad sequence of commands\n
+504 Command parameter not implemented\n
+521 <domain> does not accept mail (see rfc1846)\n
+521 <domain> does not accept mail [rfc1846]\n
+530 Access denied (???a Sendmailism)\n
+550 Not implemented\n
+550 Requested action not taken: mailbox unavailable\n
+551 User not local; please try <forward-path>\n
+552 Requested mail action aborted: exceeded storage allocation\n
+553 Requested action not taken: mailbox name not allowed\n
+554 Transaction failed\n
+"
+
+function smtpcode_usage(){
+    msg="
+    Without parameters lists all available\n
+    smtp reply codes and their description\n
+    \n
+    Options:\n
+      -h, --help            show this help message and exit\n
+    "
+    echo -e $msg
+}
+
+function main(){
+    if test $# -eq 0
+    then
+        echo -e $smtpcodelist
+    elif test "$1"=~"^[[:digit:]]{3}$"
+    then
+        smtp_code_description=$(echo -e $smtpcodelist|grep $1)
+        size_smtp_code_description=${#smtp_code_description}
+        if test $size_smtp_code_description -gt 3
+        then
+            echo $smtp_code_description
+        else
+            echo "No code found corresponding to: $1"
+        fi
+    else
+        smtpcode_usage
+    fi
+}
+
+main $1
