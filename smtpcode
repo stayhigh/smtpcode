@@ -44,7 +44,7 @@ function main(){
     if test $# -eq 0
     then
         echo -e $smtpcodelist
-    elif test "$1"=~"^[[:digit:]]{3}$"
+    elif [[ $1 =~ [0-9]{3} ]]
     then
         smtp_code_description=$(echo -e $smtpcodelist|grep $1)
         size_smtp_code_description=${#smtp_code_description}
